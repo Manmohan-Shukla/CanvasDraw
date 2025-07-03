@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true
+  },
+  "extends": "@repo/typescript-config/base.json",
+  "include": ["**/*"],
+  "exclude": []
+}
