@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import MockCanvas from "./MockCanvas";
-
+import { FRONTEND_URL } from "@/.env";
 const Hero = () => {
   const router = useRouter();
   return (
@@ -30,7 +30,7 @@ const Hero = () => {
               size="lg"
               className="bg-white cursor-pointer hover:bg-gray-200 text-black text-lg px-8 py-4"
               onClick={() => {
-                router.push(`/login`);
+                router.push(`${FRONTEND_URL}login`);
               }}
             >
               Start Drawing Now

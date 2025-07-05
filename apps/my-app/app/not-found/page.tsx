@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Home, Search, ArrowLeft } from "lucide-react";
+import { FRONTEND_URL } from "@/.env";
 
 const NotFound = () => {
   const pathname = usePathname();
@@ -52,7 +53,7 @@ const NotFound = () => {
               </p>
               <div className="flex flex-col gap-3 pt-4">
                 <Button
-                  onClick={() => (window.location.href = "/")}
+                  onClick={() => (window.location.href = `${FRONTEND_URL}`)}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   <Home className="w-4 h-4 mr-2" />

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
+import { FRONTEND_URL } from "@/.env";
 import { useRouter } from "next/navigation";
 export default function CardDemo() {
   const router = useRouter();
@@ -38,7 +38,7 @@ export default function CardDemo() {
                   <Button
                     className="text-white cursor-pointer"
                     variant="link"
-                    onClick={() => router.push("/signup")}
+                    onClick={() => router.push(`${FRONTEND_URL}signup`)}
                   >
                     Sign Up
                   </Button>
