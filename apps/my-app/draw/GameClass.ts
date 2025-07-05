@@ -1,6 +1,7 @@
 import { Tool } from "@/@types/ToolType";
 import getExistingShapes from "./http";
 import { Shape } from "@/@types/ShapeType";
+import createShape from "@/components/Shape/Shape";
 
 export class GameClass {
   private canvas: HTMLCanvasElement;
@@ -46,42 +47,6 @@ export class GameClass {
     }
   }
 
-  private createShape(
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number
-  ): Shape | null {
-    const selected = this.selected;
-
-    if (selected === "rectangle") {
-      return {
-        type: "rectangle",
-        x: x1,
-        y: y1,
-        width: x2 - x1,
-        height: y2 - y1,
-      };
-    }
-
-    if (selected === "circle") {
-      const centerX = (x1 + x2) / 2;
-      const centerY = (y1 + y2) / 2;
-      const dx = x2 - x1;
-      const dy = y2 - y1;
-      const radius = Math.sqrt(dx * dx + dy * dy) / 2;
-
-      return {
-        type: "circle",
-        centerX,
-        centerY,
-        radius,
-      };
-    }
-
-    return null;
-  }
-
   private mouseDownHandler = (e: MouseEvent) => {
     this.clicked = true;
     this.startX = e.clientX;
@@ -92,11 +57,12 @@ export class GameClass {
     if (!this.clicked) return;
     this.clicked = false;
 
-    const shape = this.createShape(
+    const shape = createShape(
       this.startX,
       this.startY,
       e.clientX,
-      e.clientY
+      e.clientY,
+      this.selected
     );
     if (!shape) return;
 
@@ -116,11 +82,12 @@ export class GameClass {
     if (!this.clicked) return;
 
     this.clearCanvas();
-    const shape = this.createShape(
+    const shape = createShape(
       this.startX,
       this.startY,
       e.clientX,
-      e.clientY
+      e.clientY,
+      this.selected
     );
     if (shape) this.drawShape(shape);
   };

@@ -1,10 +1,10 @@
 "use client";
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import Features from "@/components/Features";
-import CTA from "@/components/CTA";
-import Footer from "@/components/Footer";
-import PricingSection from "@/components/Pricing";
+import Header from "@/components/LandingPage/Header";
+import Hero from "@/components/LandingPage/Hero";
+import Features from "@/components/LandingPage/Features";
+import CTA from "@/components/LandingPage/CTA";
+import Footer from "@/components/LandingPage/Footer";
+import PricingSection from "@/components/LandingPage/Pricing";
 
 const Index = () => {
   return (

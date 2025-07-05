@@ -1,6 +1,6 @@
 "use client";
-import Header from "@/components/Header";
-import MockCanvas from "@/components/MockCanvas";
+import Header from "@/components/LandingPage/Header";
+import MockCanvas from "@/components/LandingPage/MockCanvas";
 import { Button } from "@/components/ui/button";
 import {
   Card,

@@ -1,6 +1,10 @@
 import { ReactNode } from "react";
 import { Separator } from "@/components/ui/separator";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
 
 interface IconButtonProps {
   icon: ReactNode;

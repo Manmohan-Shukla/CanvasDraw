@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-import TopBar from "./TopBar";
-import ColorCard from "./ColorCard";
+import TopBar from "./LandingPage/TopBar";
+import ColorCard from "./ColorElement/ColorCard";
 import { Tool } from "@/@types/ToolType";
 import { GameClass } from "@/draw/GameClass";
 
