@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -19,41 +19,38 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Plus, Users, List } from "lucide-react";
+import { BACKEND_URL } from "@/config";
+import axios from "axios";
+import { toast } from "sonner";
+import { Room } from "@/@types/RoomType";
 
 const Index = () => {
   const [roomSlug, setRoomSlug] = useState("");
   const [newRoomName, setNewRoomName] = useState("");
+  const [userRooms, setUserRooms] = useState<Room[]>([]);
+
+  useEffect(() => {
+    async function room() {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${BACKEND_URL}/dashboard`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUserRooms(response.data.rooms);
+      } catch (e) {
+        console.log(e);
+        toast.error("Failed to fetch rooms");
+      }
+    }
+
+    room();
+  }, []);
 
   // Mock user rooms data
-  const userRooms = [
-    {
-      id: 1,
-      name: "Design Sprint Board",
-      slug: "design-sprint-2024",
-      participants: 5,
-      lastActive: "2 hours ago",
-      status: "active",
-    },
-    {
-      id: 2,
-      name: "Architecture Planning",
-      slug: "arch-planning-v2",
-      participants: 3,
-      lastActive: "1 day ago",
-      status: "active",
-    },
-    {
-      id: 3,
-      name: "Wireframe Session",
-      slug: "wireframes-mobile",
-      participants: 2,
-      lastActive: "3 days ago",
-      status: "inactive",
-    },
-  ];
 
   const handleCreateRoom = () => {
     console.log("Creating room:", newRoomName);
@@ -238,10 +235,10 @@ const Index = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-medium text-white">
+                        {/* <h3 className="text-lg font-medium text-white">
                           {room.name}
-                        </h3>
-                        <Badge
+                        </h3> */}
+                        {/* <Badge
                           variant={
                             room.status === "active" ? "default" : "secondary"
                           }
@@ -252,15 +249,15 @@ const Index = () => {
                           }
                         >
                           {room.status}
-                        </Badge>
+                        </Badge> */}
                       </div>
                       <p className="text-sm text-gray-300 mb-1">
                         Slug: {room.slug}
                       </p>
-                      <p className="text-sm text-gray-400">
+                      {/* <p className="text-sm text-gray-400">
                         {room.participants} participants • Last active{" "}
                         {room.lastActive}
-                      </p>
+                      </p> */}
                     </div>
                     <div className="flex gap-2">
                       <Button

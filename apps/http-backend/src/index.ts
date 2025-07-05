@@ -15,6 +15,7 @@ import cors from "cors";
 const app = express();
 app.use(express.json());
 app.use(cors());
+
 app.post("/signin", async (req: Request, res: Response) => {
   const parsed = SignInSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -24,7 +25,7 @@ app.post("/signin", async (req: Request, res: Response) => {
 
   const user = await prismaClient.user.findFirst({
     where: {
-      email: parsed.data.username,
+      email: parsed.data.email,
       password: parsed.data.password,
     },
   });
@@ -59,7 +60,7 @@ app.post("/signup", async (req: Request, res: Response) => {
   try {
     const user = await prismaClient.user.create({
       data: {
-        email: parsed.data?.username,
+        email: parsed.data?.email,
         password: parsed.data?.password,
         name: parsed.data?.name,
       },
@@ -105,7 +106,7 @@ app.get("/chats/:roomId", async (req, res) => {
     const roomId = Number(req.params.roomId);
     const messages = await prismaClient.chat.findMany({
       where: {
-        roomId: roomId,
+        roomId,
       },
       orderBy: {
         id: "desc",
@@ -134,4 +135,31 @@ app.get("/room/:slug", async (req, res) => {
     room,
   });
 });
+
+app.get("/dashboard", middleware, async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const userWithRooms = await prismaClient.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        rooms: true,
+      },
+    });
+
+    if (!userWithRooms) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      rooms: userWithRooms.rooms,
+    });
+  } catch (error) {
+    console.error("Error fetching rooms:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error });
+  }
+});
+
 app.listen(3001);

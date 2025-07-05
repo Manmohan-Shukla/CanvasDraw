@@ -14,13 +14,44 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import { FRONTEND_URL } from "@/config";
+import { BACKEND_URL, FRONTEND_URL } from "@/config";
+import { useRef } from "react";
+import axios from "axios";
+import { toast, Toaster } from "sonner";
 
 export default function CardDemo() {
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  async function signup() {
+    const name = nameRef.current?.value;
+    const email = emailRef.current?.value;
+    const password = passwordRef.current?.value;
+
+    if (!name || !email || !password) {
+      toast.warning("Please fill out all fields");
+      return;
+    }
+
+    try {
+      await axios.post(BACKEND_URL + "/signup", { name, email, password });
+      toast.success("You have successfully signed up");
+      setTimeout(() => {
+        router.push(`${FRONTEND_URL}/login`);
+      }, 800);
+    } catch (error) {
+      console.error("Signup failed:", error);
+      toast.error("User exist try again");
+    }
+  }
+
   return (
     <div>
       <Header />
+
+      <Toaster position="top-right" richColors />
       <div className="bg-black h-screen grid grid-cols-6 gap-4 items-center ">
         <div className="w-full p-20 col-span-3 hidden lg:block">
           <MockCanvas />
@@ -52,9 +83,10 @@ export default function CardDemo() {
                         Name
                       </Label>
                       <Input
+                        ref={nameRef}
                         className="text-white"
                         id="Name"
-                        type="Name"
+                        type="text"
                         placeholder="john_doe"
                         required
                       />
@@ -64,6 +96,7 @@ export default function CardDemo() {
                         Email
                       </Label>
                       <Input
+                        ref={emailRef}
                         className="text-white"
                         id="email"
                         type="email"
@@ -78,7 +111,8 @@ export default function CardDemo() {
                         </Label>
                       </div>
                       <Input
-                        className="   text-white "
+                        ref={passwordRef}
+                        className="text-white "
                         id="password"
                         type="password"
                         placeholder="*******"
@@ -92,6 +126,7 @@ export default function CardDemo() {
                 <Button
                   type="submit"
                   className="w-full cursor-pointer bg-gray-950"
+                  onClick={signup}
                 >
                   Signup
                 </Button>

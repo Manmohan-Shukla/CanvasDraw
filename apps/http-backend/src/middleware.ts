@@ -1,20 +1,34 @@
-import { NextFunction, Request, Response } from "express"; //@ts-ignore
-
-import { JWT_SECRET } from "@repo/backend-common/config";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-// import { MyJwtPayload } from "./types/usertypes.";
-export function middleware(req: Request, res: Response, next: NextFunction) {
-  const token = req.headers["authorization"] ?? "";
+//@ts-ignore
+import { JWT_SECRET } from "@repo/backend-common/config";
 
-  const decoded = jwt.verify(token, JWT_SECRET);
-  if (decoded) {
+interface AuthRequest extends Request {
+  userId?: string;
+}
+
+export function middleware(
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+) {
+  const authHeader = req.headers["authorization"];
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res
+      .status(401)
+      .json({ message: "Missing or invalid Authorization header" });
+  }
+
+  const token = authHeader.split(" ")[1]; // Remove "Bearer"
+
+  try {
     //@ts-ignore
-    // how to update the structure of request object in express
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.userId = decoded.userId;
     next();
-  } else {
-    res.status(403).json({
-      message: "UNauthorized",
-    });
+  } catch (error) {
+    console.error("JWT error:", error);
+    return res.status(403).json({ message: "Unauthorized - Invalid token" });
   }
 }
