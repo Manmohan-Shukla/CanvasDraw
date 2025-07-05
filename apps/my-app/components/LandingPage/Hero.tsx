@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import MockCanvas from "./MockCanvas";
-import { FRONTEND_URL } from "@/.env";
+import { FRONTEND_URL } from "@/config";
 const Hero = () => {
   const router = useRouter();
   return (

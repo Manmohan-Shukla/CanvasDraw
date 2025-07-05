@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Home, Search, ArrowLeft } from "lucide-react";
-import { FRONTEND_URL } from "@/.env";
+import { FRONTEND_URL } from "@/config";
 
 const NotFound = () => {
   const pathname = usePathname();

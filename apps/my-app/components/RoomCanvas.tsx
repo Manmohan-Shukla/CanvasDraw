@@ -1,6 +1,6 @@
 "use client";
 
-import { WS_URL } from "@/.env";
+import { WS_URL } from "@/config";
 import { useEffect, useState } from "react";
 import { Canvas } from "./Canvas";
 import LoadingSpinner from "./LoadingSpinner";

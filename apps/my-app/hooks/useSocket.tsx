@@ -1,4 +1,4 @@
-import { WS_URL } from "@/.env";
+import { WS_URL } from "@/config";
 import { useEffect, useState } from "react";
 
 export function useSocket() {

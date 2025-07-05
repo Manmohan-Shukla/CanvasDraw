@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Palette } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FRONTEND_URL } from "@/.env";
+import { FRONTEND_URL } from "@/config";
 
 export function scrollToSection(section: string) {
   const pricingSection = document.getElementById(section);
