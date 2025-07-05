@@ -36,7 +36,7 @@ export function ChatRoomClient({
   return (
     <div>
       {chats.map((m) => (
-        <div>{m.message}</div>
+        <div key={id}>{m.message}</div>
       ))}
 
       <input

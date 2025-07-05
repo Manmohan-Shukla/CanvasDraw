@@ -42,7 +42,7 @@ const NotFound = () => {
             </CardHeader>
             <CardContent className="text-center space-y-4">
               <p className="text-gray-400">
-                The page you're looking for doesn't exist or has been moved.
+                The page you are looking for doesnot exist or has been moved.
               </p>
               <p className="text-sm text-gray-500">
                 Route:{" "}
