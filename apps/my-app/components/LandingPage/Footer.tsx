@@ -1,4 +1,5 @@
 import { Palette, Github, Twitter, Linkedin } from "lucide-react";
+import { scrollToSection } from "./Option";
 
 const Footer = () => {
   return (
@@ -19,19 +20,19 @@ const Footer = () => {
             <div className="flex space-x-4">
               <a
                 href="#"
-                className="text-white hover:text-black transition-colors"
+                className="text-white hover:text-black cursor-pointer transition-colors"
               >
                 <Twitter className="w-5 h-5" />
               </a>
               <a
                 href="#"
-                className="text-white hover:text-black transition-colors"
+                className="text-white hover:text-black cursor-pointer transition-colors"
               >
                 <Github className="w-5 h-5" />
               </a>
               <a
                 href="#"
-                className="text-white hover:text-black transition-colors"
+                className="text-white hover:text-black cursor-pointer transition-colors"
               >
                 <Linkedin className="w-5 h-5" />
               </a>
@@ -43,27 +44,33 @@ const Footer = () => {
             <ul className="space-y-2 text-gray-500">
               <li>
                 <a
-                  href="#features"
-                  className="hover:text-white transition-colors"
+                  onClick={() => scrollToSection("features")}
+                  className="hover:text-white cursor-pointer transition-colors"
                 >
                   Features
                 </a>
               </li>
               <li>
                 <a
-                  href="#pricing"
-                  className="hover:text-white transition-colors"
+                  onClick={() => scrollToSection("pricing")}
+                  className="hover:text-white cursor-pointer transition-colors"
                 >
                   Pricing
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a
+                  href="#"
+                  className="hover:text-white cursor-pointer transition-colors"
+                >
                   Templates
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a
+                  href="#"
+                  className="hover:text-white cursor-pointer transition-colors"
+                >
                   Integrations
                 </a>
               </li>
@@ -74,22 +81,34 @@ const Footer = () => {
             <h3 className="font-semibold text-white mb-4">Company</h3>
             <ul className="space-y-2 text-gray-500">
               <li>
-                <a href="#about" className="hover:text-white transition-colors">
+                <a
+                  onClick={() => scrollToSection("about")}
+                  className="hover:text-white cursor-pointer transition-colors"
+                >
                   About
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a
+                  href="#"
+                  className="hover:text-white cursor-pointer transition-colors"
+                >
                   Blog
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a
+                  href="#"
+                  className="hover:text-white cursor-pointer transition-colors"
+                >
                   Career
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a
+                  href="#"
+                  className="hover:text-white cursor-pointer transition-colors"
+                >
                   Contact
                 </a>
               </li>

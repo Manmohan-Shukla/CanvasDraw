@@ -1,12 +1,20 @@
 import { Button } from "@/components/ui/button";
+import { FRONTEND_URL } from "@/config";
 import { ArrowRight, Star } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const CTA = () => {
+  const router = useRouter();
+
   const scrollToPricing = () => {
     const pricingSection = document.getElementById("pricing");
     if (pricingSection) {
       pricingSection.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const handleNavigate = (path: string) => {
+    router.push(`${FRONTEND_URL}${path}`);
   };
 
   return (
@@ -34,7 +42,8 @@ const CTA = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
               size="lg"
-              className="bg-black text-white hover:bg-gray-800 text-lg px-8 py-4"
+              className="bg-black text-white cursor-pointer hover:bg-gray-800 text-lg px-8 py-4"
+              onClick={() => handleNavigate("signup")}
             >
               Start Drawing Now
               <ArrowRight className="ml-2 w-5 h-5" />
@@ -43,7 +52,7 @@ const CTA = () => {
               size="lg"
               variant="outline"
               onClick={scrollToPricing}
-              className="border-black text-black hover:bg-black hover:text-white text-lg px-8 py-4 transition-all duration-300"
+              className="border-black text-black cursor-pointer hover:bg-black hover:text-white text-lg px-8 py-4 transition-all duration-300"
             >
               View Pricing
             </Button>
