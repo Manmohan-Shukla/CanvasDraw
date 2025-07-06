@@ -15,7 +15,7 @@ import cors from "cors";
 const app = express();
 app.use(express.json());
 app.use(cors());
-
+const PORT = process.env.PORT || 3001;
 app.post("/signin", async (req: Request, res: Response) => {
   const parsed = SignInSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -162,4 +162,4 @@ app.get("/dashboard", middleware, async (req, res) => {
   }
 });
 
-app.listen(3001);
+app.listen(PORT);
