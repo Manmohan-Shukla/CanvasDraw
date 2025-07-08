@@ -46,7 +46,17 @@ export default function RoomsPage() {
 
   return (
     <div className="min-h-screen bg-gray-900 px-6 py-10">
-      <h1 className="text-3xl font-bold text-white mb-6">Your Rooms</h1>
+      <div className="flex justify-between">
+        <h1 className="text-3xl font-bold text-white mb-6">Your Rooms</h1>
+        <Button
+          className="bg-black border border-gray-600 hover:bg-gray-800 text-white cursor-pointer"
+          onClick={() => {
+            router.push(`/canvas`);
+          }}
+        >
+          Back to Dashboard
+        </Button>
+      </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {rooms.map((room) => (
           <Card key={room.id} className="bg-black border-gray-700 text-white">

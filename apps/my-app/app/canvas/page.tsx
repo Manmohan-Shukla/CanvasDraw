@@ -7,6 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Loader from "@/components/LoadingSpinner"; // 👈 your loader component
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +33,7 @@ const Index = () => {
   const [roomId, setRoomId] = useState("");
   const [newRoomName, setNewRoomName] = useState("");
   const [userRooms, setUserRooms] = useState<Room[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   useEffect(() => {
     async function room() {
@@ -45,6 +48,8 @@ const Index = () => {
       } catch (e) {
         console.log(e);
         toast.error("Failed to fetch rooms");
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -71,6 +76,7 @@ const Index = () => {
       router.push(`canvas/${response.data.roomId}`);
     } catch (e) {
       console.log(e);
+      toast.error("unable to create room");
     }
     // Room creation logic would go here
   };
@@ -82,11 +88,20 @@ const Index = () => {
     }
     console.log("Joining room:", roomId);
     const roomId1 = Number(roomId);
-
+    if (!localStorage.getItem("token")) {
+      toast.error("unable to join room");
+    }
     // const slug = roomId.trim().toLowerCase().replace(/\s+/g, "-");
     router.push(`canvas/${roomId1}`);
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900">
+        <Loader variant="canvas" />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen scrollbar-none bg-gray-900">
       {/* Header */}
@@ -331,7 +346,9 @@ const Index = () => {
         <Separator className="my-12 bg-gray-700" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div>
-            <div className="text-3xl font-bold text-white mb-1">12</div>
+            <div className="text-3xl font-bold text-white mb-1">
+              {userRooms.length}
+            </div>
             <div className="text-gray-300">Total Rooms</div>
           </div>
           <div>
