@@ -23,14 +23,15 @@ import { Separator } from "@/components/ui/separator";
 import { Plus, Users, List } from "lucide-react";
 import { BACKEND_URL } from "@/config";
 import axios from "axios";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import { Room } from "@/@types/RoomType";
+import { useRouter } from "next/navigation";
 
 const Index = () => {
-  const [roomSlug, setRoomSlug] = useState("");
+  const [roomId, setRoomId] = useState("");
   const [newRoomName, setNewRoomName] = useState("");
   const [userRooms, setUserRooms] = useState<Room[]>([]);
-
+  const router = useRouter();
   useEffect(() => {
     async function room() {
       try {
@@ -52,18 +53,42 @@ const Index = () => {
 
   // Mock user rooms data
 
-  const handleCreateRoom = () => {
+  const handleCreateRoom = async () => {
     console.log("Creating room:", newRoomName);
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/room`,
+        { name: newRoomName },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      toast.success(
+        `Room has been successfully created RoomId: ${response.data.roomId}`
+      );
+      router.push(`canvas/${response.data.roomId}`);
+    } catch (e) {
+      console.log(e);
+    }
     // Room creation logic would go here
   };
 
-  const handleJoinRoom = () => {
-    console.log("Joining room:", roomSlug);
-    // Room joining logic would go here
+  const handleJoinRoom = (roomId: string | number) => {
+    if (!roomId || typeof roomId !== "number") {
+      toast.error("Invalid room ID ");
+      return;
+    }
+    console.log("Joining room:", roomId);
+    const roomId1 = Number(roomId);
+
+    // const slug = roomId.trim().toLowerCase().replace(/\s+/g, "-");
+    router.push(`canvas/${roomId1}`);
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen scrollbar-none bg-gray-900">
       {/* Header */}
       <div className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-8">
@@ -77,11 +102,12 @@ const Index = () => {
       </div>
 
       {/* Main Dashboard */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-6 py-12 ">
         {/* Action Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Create New Room Card */}
           <Card className="border-2 border-gray-700 hover:border-blue-600 hover:shadow-lg transition-all duration-300 group bg-black">
+            <Toaster richColors position="top-right" />
             <CardHeader className="text-center pb-4">
               <div className="w-16 h-16 mx-auto mb-4 bg-blue-50 rounded-full flex items-center justify-center group-hover:bg-blue-100 transition-colors">
                 <Plus className="w-8 h-8 text-blue-600" />
@@ -96,7 +122,7 @@ const Index = () => {
             <CardContent className="pt-0">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className="w-full bg-black border border-gray-600 hover:bg-gray-800 text-white">
+                  <Button className="w-full bg-black border cursor-pointer border-gray-600 hover:bg-gray-800 text-white">
                     Create Room
                   </Button>
                 </DialogTrigger>
@@ -126,7 +152,7 @@ const Index = () => {
                   <DialogFooter>
                     <Button
                       onClick={handleCreateRoom}
-                      className="bg-black border border-gray-600 hover:bg-gray-800 text-white"
+                      className="bg-black border cursor-pointer border-gray-600 hover:bg-gray-800 text-white"
                     >
                       Create Room
                     </Button>
@@ -152,7 +178,7 @@ const Index = () => {
                 <DialogTrigger asChild>
                   <Button
                     variant="outline"
-                    className="w-full border-gray-600 bg-black hover:bg-gray-800 text-white"
+                    className="w-full border-gray-600 cursor-pointer bg-black hover:bg-gray-800 text-white "
                   >
                     Join Room
                   </Button>
@@ -166,22 +192,24 @@ const Index = () => {
                   </DialogHeader>
                   <div className="space-y-4 py-4">
                     <div className="space-y-2">
-                      <Label htmlFor="roomSlug" className="text-white">
+                      <Label htmlFor="roomId" className="text-white">
                         Room Slug or Code
                       </Label>
                       <Input
-                        id="roomSlug"
+                        id="roomId"
                         placeholder="design-sprint-2024"
-                        value={roomSlug}
-                        onChange={(e) => setRoomSlug(e.target.value)}
+                        value={roomId}
+                        onChange={(e) => setRoomId(e.target.value)}
                         className="text-white bg-gray-800 border-gray-600"
                       />
                     </div>
                   </div>
                   <DialogFooter>
                     <Button
-                      onClick={handleJoinRoom}
-                      className="bg-black border border-gray-600 hover:bg-gray-800 text-white"
+                      onClick={() => {
+                        handleJoinRoom(Number(roomId));
+                      }}
+                      className="bg-black border border-gray-600 cursor-pointer hover:bg-gray-800 text-white"
                     >
                       Join Room
                     </Button>
@@ -205,7 +233,10 @@ const Index = () => {
             <CardContent className="pt-0">
               <Button
                 variant="outline"
-                className="w-full border-gray-600 bg-black hover:bg-gray-800 text-white"
+                className="w-full border-gray-600 bg-black hover:bg-gray-800 text-white cursor-pointer"
+                onClick={() => {
+                  router.push(`/canvas/room`);
+                }}
               >
                 View All Rooms
               </Button>
@@ -219,26 +250,32 @@ const Index = () => {
             <h2 className="text-2xl font-semibold text-white">Recent Rooms</h2>
             <Button
               variant="ghost"
-              className="text-gray-300 hover:text-white hover:bg-gray-800"
+              className="text-gray-300 hover:text-white hover:bg-gray-800 cursor-pointer"
+              onClick={() => {
+                router.push(`/canvas/room`);
+              }}
             >
               View All
             </Button>
           </div>
 
           <div className="grid gap-4">
-            {userRooms.map((room) => (
-              <Card
-                key={room.id}
-                className="border border-gray-700 hover:shadow-md transition-shadow bg-black"
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        {/* <h3 className="text-lg font-medium text-white">
+            {[...userRooms]
+              .sort((a, b) => b.id - a.id)
+              .slice(0, 3)
+              .map((room) => (
+                <Card
+                  key={room.id}
+                  className="border border-gray-700 hover:shadow-md transition-shadow bg-black"
+                >
+                  <CardContent className="p-6 overflow-ellipsis">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          {/* <h3 className="text-lg font-medium text-white">
                           {room.name}
                         </h3> */}
-                        {/* <Badge
+                          {/* <Badge
                           variant={
                             room.status === "active" ? "default" : "secondary"
                           }
@@ -250,34 +287,43 @@ const Index = () => {
                         >
                           {room.status}
                         </Badge> */}
+                        </div>
+                        <p className="text-sm text-gray-300 mb-1">
+                          Slug: {room.slug}
+                        </p>
+                        <p className="text-sm text-gray-400">
+                          RoomId: {room.id}
+                        </p>
                       </div>
-                      <p className="text-sm text-gray-300 mb-1">
-                        Slug: {room.slug}
-                      </p>
-                      {/* <p className="text-sm text-gray-400">
-                        {room.participants} participants • Last active{" "}
-                        {room.lastActive}
-                      </p> */}
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          className="bg-black border border-gray-600 hover:bg-gray-800 text-white cursor-pointer"
+                          onClick={() => {
+                            // or room.slug depending on your logic
+                            handleJoinRoom(room.id);
+                          }}
+                        >
+                          Open
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-gray-600 bg-black hover:bg-gray-800 text-white cursor-pointer"
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              `${window.location.origin}/canvas/${room.id}`
+                            );
+                            toast.success("Room link copied!");
+                          }}
+                        >
+                          Share
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        className="bg-black border border-gray-600 hover:bg-gray-800 text-white"
-                      >
-                        Open
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-gray-600 bg-black hover:bg-gray-800 text-white"
-                      >
-                        Share
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </div>
 

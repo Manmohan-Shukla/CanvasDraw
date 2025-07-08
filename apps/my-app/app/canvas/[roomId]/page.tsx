@@ -6,3 +6,4 @@ interface Params {
 export default async function CanvasPage({ params }: Params) {
   return <RoomCanvas roomId={(await params).roomId} />;
 }
+//slug to obtain roomid for userreadable url

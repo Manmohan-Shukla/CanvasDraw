@@ -4,10 +4,18 @@ import { WS_URL } from "@/config";
 import { useEffect, useState } from "react";
 import { Canvas } from "./Canvas";
 import LoadingSpinner from "./LoadingSpinner";
+
 export function RoomCanvas({ roomId }: { roomId: string }) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
+
   useEffect(() => {
-    const ws = new WebSocket(WS_URL);
+    if (typeof window === "undefined") return;
+
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const ws = new WebSocket(`${WS_URL}${token}`);
+
     ws.onopen = () => {
       setSocket(ws);
       ws.send(
@@ -17,7 +25,12 @@ export function RoomCanvas({ roomId }: { roomId: string }) {
         })
       );
     };
-  }, []);
+
+    // Cleanup socket on unmount
+    return () => {
+      ws.close();
+    };
+  }, [roomId]);
 
   if (!socket) {
     return (

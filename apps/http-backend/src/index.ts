@@ -69,6 +69,7 @@ app.post("/signup", async (req: Request, res: Response) => {
       userId: user.id,
     });
   } catch (e) {
+    console.log("error", e);
     res.status(411).json({
       message: "USER ALREADY EXSIST",
     });
@@ -96,7 +97,7 @@ app.post("/room", middleware, async (req: Request, res: Response) => {
     });
   } catch (e) {
     res.status(411).json({
-      message: "ROOM ALREDY CREATED ",
+      message: "ROOM ALREADY CREATED ",
     });
   }
 });
@@ -162,4 +163,4 @@ app.get("/dashboard", middleware, async (req, res) => {
   }
 });
 
-app.listen(PORT);
+app.listen(3001);

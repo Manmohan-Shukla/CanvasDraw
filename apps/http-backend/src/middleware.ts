@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 //@ts-ignore
 import { JWT_SECRET } from "@repo/backend-common/config";
 
-const JWT_SECRET1 = process.env.JWT_SECRET || JWT_SECRET;
+// const JWT_SECRET1 = process.env.JWT_SECRET || JWT_SECRET;
 
 interface AuthRequest extends Request {
   userId?: string;
@@ -26,7 +26,7 @@ export function middleware(
 
   try {
     //@ts-ignore
-    const decoded = jwt.verify(token, JWT_SECRET1);
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.userId = decoded.userId;
     next();
   } catch (error) {
