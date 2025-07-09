@@ -83,12 +83,11 @@ app.post("/room", middleware, async (req: Request, res: Response) => {
     return res.status(400).json({ error: parsed.error.errors });
   }
   //@ts-ignore
-  const userId = req.userId;
   try {
     const room = await prismaClient.room.create({
       data: {
         slug: parsed.data.name,
-        adminId: userId,
+        adminId: parsed.data.userId,
       },
     });
 
@@ -99,6 +98,41 @@ app.post("/room", middleware, async (req: Request, res: Response) => {
     res.status(411).json({
       message: "ROOM ALREADY CREATED ",
     });
+  }
+});
+
+app.delete("/room", middleware, async (req: Request, res: Response) => {
+  const { slug } = req.body;
+
+  if (!slug || typeof slug !== "string") {
+    return res
+      .status(400)
+      .json({ message: "Slug is required and must be a string" });
+  }
+
+  try {
+    const room = await prismaClient.room.findUnique({
+      where: { slug },
+    });
+
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    if (room.adminId !== req.userId) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this room" });
+    }
+
+    await prismaClient.room.delete({
+      where: { slug },
+    });
+
+    res.json({ message: "Room deleted successfully" });
+  } catch (e) {
+    console.error("Error deleting room:", e);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
