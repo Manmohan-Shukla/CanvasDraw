@@ -125,6 +125,11 @@ app.delete("/room", middleware, async (req: Request, res: Response) => {
         .json({ message: "Not authorized to delete this room" });
     }
 
+    //delete all related chat otherwise foreign key voilate
+    await prismaClient.chat.deleteMany({
+      where: { roomId: room.id },
+    });
+
     await prismaClient.room.delete({
       where: { slug },
     });

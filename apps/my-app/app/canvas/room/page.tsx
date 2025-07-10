@@ -7,32 +7,32 @@ import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 import Loader from "@/components/LoadingSpinner"; // 👈 your loader component
+import { ArrowBigLeft, MoveLeft, MoveRight } from "lucide-react";
 
 export default function RoomsPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  const fetchRooms = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${BACKEND_URL}/dashboard`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setRooms(res.data.rooms);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to load rooms.");
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchRooms = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(`${BACKEND_URL}/dashboard`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setRooms(res.data.rooms);
-      } catch (err) {
-        console.error(err);
-        toast.error("Failed to load rooms.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchRooms();
   }, []);
 
@@ -42,6 +42,22 @@ export default function RoomsPage() {
         <Loader variant="canvas" />
       </div>
     );
+  }
+
+  async function deleteRoom(slug: string) {
+    try {
+      await axios.delete(`${BACKEND_URL}/room`, {
+        data: { slug },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      fetchRooms();
+      toast.success("Room deleted successfully");
+    } catch (e) {
+      console.error(e);
+      toast.error("Room cannot be deleted");
+    }
   }
 
   return (
@@ -54,12 +70,13 @@ export default function RoomsPage() {
             router.push(`/canvas`);
           }}
         >
-          Back to Dashboard
+          <MoveLeft /> Back to Dashboard
         </Button>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {rooms.map((room) => (
           <Card key={room.id} className="bg-black border-gray-700 text-white">
+            <Toaster richColors position="top-right" />
             <CardHeader>
               <CardTitle>{room.slug}</CardTitle>
             </CardHeader>
@@ -67,12 +84,20 @@ export default function RoomsPage() {
               <div>
                 <p className="text-sm text-gray-400">Room ID: {room.id}</p>
               </div>
-              <Button
-                onClick={() => router.push(`/canvas/${room.id}`)}
-                className="bg-black border border-gray-600 hover:bg-gray-800 text-white cursor-pointer"
-              >
-                Open
-              </Button>
+              <div className="flex gap-2 ">
+                <Button
+                  onClick={() => router.push(`/canvas/${room.id}`)}
+                  className="bg-black border border-gray-600 hover:bg-gray-800 text-white cursor-pointer"
+                >
+                  Open
+                </Button>
+                <Button
+                  onClick={() => deleteRoom(room.slug)}
+                  className="bg-black border border-gray-600 hover:text-red-500 hover:border-red-500 hover:bg-gray-800 text-white cursor-pointer"
+                >
+                  Delete
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}
