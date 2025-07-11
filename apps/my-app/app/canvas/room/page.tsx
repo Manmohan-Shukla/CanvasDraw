@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast, Toaster } from "sonner";
 import Loader from "@/components/LoadingSpinner"; // 👈 your loader component
-import { ArrowBigLeft, MoveLeft, MoveRight } from "lucide-react";
+import { MoveLeft } from "lucide-react";
 
 export default function RoomsPage() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -33,6 +33,22 @@ export default function RoomsPage() {
     }
   };
   useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${BACKEND_URL}/dashboard`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setRooms(res.data.rooms);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load rooms.");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchRooms();
   }, []);
 

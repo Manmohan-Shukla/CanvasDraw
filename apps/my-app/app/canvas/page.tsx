@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Plus, Users, List } from "lucide-react";
-import { BACKEND_URL } from "@/config";
+import { BACKEND_URL, FRONTEND_URL } from "@/config";
 import axios from "axios";
 import { toast, Toaster } from "sonner";
 import { Room } from "@/@types/RoomType";
@@ -35,7 +35,32 @@ const Index = () => {
   const [userRooms, setUserRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
+  const [hasToken, setHasToken] = useState<boolean>(false);
+
+  const Out = () => {
+    setHasToken(false);
+    localStorage.removeItem("token");
+    toast.success("Logged out successfully");
+    router.push(`${FRONTEND_URL}`);
+  };
+
+  const Signout = () => {
+    return (
+      <div className="absolute top-5 right-0 m-4">
+        <Button
+          variant="outline"
+          className="border-gray-700 text-black cursor-pointer hover:bg-gray-200"
+          onClick={Out}
+        >
+          Signout
+        </Button>
+      </div>
+    );
+  };
+
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    setHasToken(!!token);
     async function room() {
       try {
         const token = localStorage.getItem("token");
@@ -56,9 +81,17 @@ const Index = () => {
     room();
   }, []);
 
-  // Mock user rooms data
-
   const handleCreateRoom = async () => {
+    if (
+      !newRoomName ||
+      typeof newRoomName !== "string" ||
+      !newRoomName.trim()
+    ) {
+      toast.error("Room name is required");
+      return;
+    }
+
+    console.log("Creating room with name:", newRoomName);
     console.log("Creating room:", newRoomName);
     try {
       const response = await axios.post(
@@ -66,6 +99,7 @@ const Index = () => {
         { name: newRoomName },
         {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
@@ -113,6 +147,7 @@ const Index = () => {
               Collaborative drawing made simple
             </p>
           </div>
+          {hasToken && <Signout />}
         </div>
       </div>
 

@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X, Palette } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FRONTEND_URL } from "@/config";
 import Option from "./Option";
+import { toast } from "sonner";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const router = useRouter();
 
   const handleNavigate = (path: string) => {
@@ -29,6 +31,31 @@ const Header = () => {
       <span className="text-xl font-bold text-white">CanvasDraw</span>
     </button>
   );
+  const [hasToken, setHasToken] = useState<boolean>(false);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setHasToken(!!token);
+  }, []);
+  const Out = () => {
+    setHasToken(false);
+    localStorage.removeItem("token");
+    toast.success("Logged out successfully");
+    router.push(`${FRONTEND_URL}`);
+  };
+
+  const Signout = () => {
+    return (
+      <div>
+        <Button
+          variant="outline"
+          className="border-gray-700 text-black cursor-pointer hover:bg-gray-200"
+          onClick={Out}
+        >
+          Signout
+        </Button>
+      </div>
+    );
+  };
 
   const NavButtons = () => (
     <>
@@ -56,7 +83,7 @@ const Header = () => {
 
           <nav className="hidden md:flex items-center space-x-6">
             {shouldShowOption && <Option />}
-            <NavButtons />
+            {hasToken ? <Signout /> : <NavButtons />}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -78,7 +105,7 @@ const Header = () => {
             <nav className="flex flex-col space-y-4">
               {shouldShowOption && <Option />}
               <div className="flex flex-col cursor-pointer space-y-2 pt-4">
-                <NavButtons />
+                {hasToken ? <NavButtons /> : <Signout />}
               </div>
             </nav>
           </div>

@@ -82,12 +82,16 @@ app.post("/room", middleware, async (req: Request, res: Response) => {
     console.log("Validation failed:", parsed.error.format()); // or parsed.error.errors
     return res.status(400).json({ error: parsed.error.errors });
   }
+  const userId = req.userId;
+  if (!userId) {
+    return res.status(401).json({ message: "Unauthorized - Missing user ID" });
+  }
   //@ts-ignore
   try {
     const room = await prismaClient.room.create({
       data: {
         slug: parsed.data.name,
-        adminId: parsed.data.userId,
+        adminId: userId,
       },
     });
 
@@ -95,6 +99,7 @@ app.post("/room", middleware, async (req: Request, res: Response) => {
       roomId: room.id,
     });
   } catch (e) {
+    console.log("error", e);
     res.status(411).json({
       message: "ROOM ALREADY CREATED ",
     });
