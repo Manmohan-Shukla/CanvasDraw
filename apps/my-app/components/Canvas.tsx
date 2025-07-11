@@ -16,7 +16,6 @@ export function Canvas({
   const [selected, setSelected] = useState<Tool>("circle");
   const [game, setGame] = useState<GameClass>();
   useEffect(() => {
-    console.log(selected, "useEffect");
     game?.setTool(selected);
   }, [selected, game]);
 
@@ -38,7 +37,7 @@ export function Canvas({
         height={window.innerHeight}
       ></canvas>
       <TopBar selected={selected} setSelected={setSelected} />
-      <ColorCard />
+      {game && <ColorCard game={game} />}
     </div>
   );
 }

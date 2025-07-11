@@ -12,6 +12,7 @@ export class GameClass {
   private clicked = false;
   private startX = 0;
   private startY = 0;
+  private width = 5;
   private selected: Tool = "rectangle";
 
   constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
@@ -37,10 +38,13 @@ export class GameClass {
   }
 
   private drawShape(shape: Shape) {
+    this.ctx.lineWidth = shape.strokeWidth;
     if (shape.type === "rectangle") {
+      //@ts-expect-error jjj
       this.ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
     } else if (shape.type === "circle") {
       this.ctx.beginPath();
+      //@ts-expect-error jjj
       this.ctx.arc(shape.centerX, shape.centerY, shape.radius, 0, Math.PI * 2);
       this.ctx.stroke();
       this.ctx.closePath();
@@ -62,7 +66,8 @@ export class GameClass {
       this.startY,
       e.clientX,
       e.clientY,
-      this.selected
+      this.selected,
+      this.width
     );
     if (!shape) return;
 
@@ -87,7 +92,8 @@ export class GameClass {
       this.startY,
       e.clientX,
       e.clientY,
-      this.selected
+      this.selected,
+      this.width
     );
     if (shape) this.drawShape(shape);
   };
@@ -122,5 +128,10 @@ export class GameClass {
     this.canvas.addEventListener("mousedown", this.mouseDownHandler);
     this.canvas.addEventListener("mouseup", this.mouseUpHandler);
     this.canvas.addEventListener("mousemove", this.mouseMoveHandler);
+  }
+
+  public strokeWidth(e: number) {
+    this.width = Number(e);
+    this.ctx.lineWidth = this.width;
   }
 }

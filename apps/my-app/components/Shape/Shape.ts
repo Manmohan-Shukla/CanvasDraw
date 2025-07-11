@@ -5,7 +5,8 @@ export default function createShape(
   y1: number,
   x2: number,
   y2: number,
-  selected: string
+  selected: string,
+  strokeWidth: number
 ): Shape | null {
   if (selected === "rectangle") {
     return {
@@ -14,6 +15,7 @@ export default function createShape(
       y: y1,
       width: x2 - x1,
       height: y2 - y1,
+      strokeWidth,
     };
   }
 
@@ -29,6 +31,7 @@ export default function createShape(
       centerX,
       centerY,
       radius,
+      strokeWidth,
     };
   }
 

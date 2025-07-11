@@ -1,14 +1,13 @@
-export type Shape =
-  | {
-      type: "rectangle";
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    }
-  | {
-      type: "circle";
-      centerX: number;
-      centerY: number;
-      radius: number;
-    };
+export interface Shape {
+  type: "rectangle" | "circle";
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  centerX?: number;
+  centerY?: number;
+  radius?: number;
+
+  strokeWidth: number; // ✅ add this
+  // You can also add strokeColor, fillColor, etc. later
+}
