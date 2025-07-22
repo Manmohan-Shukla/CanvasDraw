@@ -39,15 +39,22 @@ export class GameClass {
 
   private drawShape(shape: Shape) {
     this.ctx.lineWidth = shape.strokeWidth;
-    if (shape.type === "rectangle") {
-      //@ts-expect-error jjj
+
+    if (shape.type === "rectangle" || shape.type === "square") {
       this.ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
     } else if (shape.type === "circle") {
       this.ctx.beginPath();
-      //@ts-expect-error jjj
       this.ctx.arc(shape.centerX, shape.centerY, shape.radius, 0, Math.PI * 2);
       this.ctx.stroke();
       this.ctx.closePath();
+    } else if (shape.type === "triangle") {
+      const [p1, p2, p3] = shape.points; // points: [{x, y}, {x, y}, {x, y}]
+      this.ctx.beginPath();
+      this.ctx.moveTo(p1.x, p1.y);
+      this.ctx.lineTo(p2.x, p2.y);
+      this.ctx.lineTo(p3.x, p3.y);
+      this.ctx.closePath();
+      this.ctx.stroke();
     }
   }
 

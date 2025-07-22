@@ -2,22 +2,24 @@ import Iconbotton from "@/components/ColorElement/Icon";
 import {
   CircleIcon,
   RectangleHorizontalIcon,
+  SquareIcon,
   // EraserIcon,
   // HandIcon,
   // Minus,
   // MoveRight,
   // PencilIcon,
   //  CaseUpper,
-  // SquareIcon,
-  // TriangleIcon,
+  TriangleIcon,
 } from "lucide-react";
 
-type Tool = "circle" | "rectangle";
-// | "pencil"
-// | "arrow"
-// | "erasure"
-// | "triangle"
-// | "square"
+type Tool =
+  | "circle"
+  | "rectangle"
+  // | "pencil"
+  // | "arrow"
+  // | "erasure"
+  | "triangle"
+  | "square";
 // | "text"
 // | "line"
 // | "select";
@@ -65,23 +67,23 @@ export default function TopBar({
           }}
           name="rectangle"
         />
-        {/* <Iconbotton
+        <Iconbotton
           activated={selected === "square"}
           icon={<SquareIcon />}
           onClick={() => {
             setSelected("square");
           }}
           name="square"
-        /> */}
+        />
 
-        {/* <Iconbotton
+        <Iconbotton
           activated={selected === "triangle"}
           icon={<TriangleIcon />}
           onClick={() => {
             setSelected("triangle");
           }}
           name="triangle"
-        /> */}
+        />
         <Iconbotton
           activated={selected === "circle"}
           icon={<CircleIcon />}
