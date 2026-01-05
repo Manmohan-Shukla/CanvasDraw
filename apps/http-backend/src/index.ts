@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 //@ts-ignore
-import { JWT_SECRET } from "@repo/backend-common/config";
+//import { JWT_SECRET } from "@repo/backend-common/config";
 import { middleware } from "./middleware.js";
 import {
   CreateUserSchema,
@@ -36,6 +36,11 @@ app.post("/signin", async (req: Request, res: Response) => {
     });
     return;
   }
+const JWT_SECRET = process.env.JWT_SECRET as string;
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined in environment variables");
+}
 
   const token = jwt.sign(
     {
